@@ -4,10 +4,11 @@ import signUp from "../../assets/Authentication/signUp.jpg";
 import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../Provider/AuthProvider";
+import Swal from "sweetalert2";
 
 const Signup = () => {
   const [customError, setError] = useState("");
-  const { signUpUser, updateUser, user } = useContext(AuthContext);
+  const { signUpUser, updateUser, signUpGoogle } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -15,7 +16,16 @@ const Signup = () => {
   } = useForm();
 
   const handleSignupGoogle = () => {
-    console.log("google Signup")
+    signUpGoogle()
+      .then(() => {
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Your work has been saved",
+          showConfirmButton: false,
+          timer: 1500
+        });
+      })
   }
 
 
