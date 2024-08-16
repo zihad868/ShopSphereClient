@@ -5,8 +5,10 @@ import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../Provider/AuthProvider";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [customError, setError] = useState("");
   const { signUpUser, updateUser, signUpGoogle } = useContext(AuthContext);
   const {
@@ -17,15 +19,25 @@ const Signup = () => {
 
   const handleSignupGoogle = () => {
     signUpGoogle()
-      .then(() => {
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "Your work has been saved",
-          showConfirmButton: false,
-          timer: 1500
-        });
-      })
+    .then(() => {
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Your work has been saved",
+        showConfirmButton: false,
+        timer: 1500
+      });
+      navigate('/');
+    })
+    .catch((error) => {
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: error,
+        showConfirmButton: false,
+        timer: 1500
+      });
+    })
   }
 
 
@@ -65,7 +77,23 @@ const Signup = () => {
           //Update User
           updateUser(name, imgURL)
             .then(() => {
-              console.log("Signup Success")
+              Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Your work has been saved",
+                showConfirmButton: false,
+                timer: 1500
+              });
+              navigate('/');
+            })
+            .catch((error) => {
+              Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: error,
+                showConfirmButton: false,
+                timer: 1500
+              });
             })
         })
 
@@ -90,6 +118,10 @@ const Signup = () => {
               <FcGoogle className="w-16" /> Signup With Google
             </div>
           </button>
+
+          <div className="text-xl text-center text-gray-500 uppercase mt-8">
+              or signup with email and password
+          </div>
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="form-control">
