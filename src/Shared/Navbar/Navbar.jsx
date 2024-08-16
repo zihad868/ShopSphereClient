@@ -1,12 +1,19 @@
 import { Link, NavLink } from "react-router-dom";
-import logo from '../../assets/Navbar/shop.jpg'
+import logo from "../../assets/Navbar/shop.jpg";
+import { useContext } from "react";
+import { AuthContext } from "../../Provider/AuthProvider";
 
 const Navbar = () => {
+  const { user } = useContext(AuthContext);
+
+  const handleLogOut = () =>{
+    console.log("Logout")
+  }
+
   const Nav = (
     <>
       <NavLink>Home</NavLink>
       <NavLink>About</NavLink>
-      <NavLink>Home</NavLink>
     </>
   );
   return (
@@ -47,9 +54,29 @@ const Navbar = () => {
         <ul className="menu menu-horizontal px-1 space-x-5 text-xl">{Nav}</ul>
       </div>
       <div className="navbar-end">
-        <Link to="/signin">
-          <a className="btn">Sign-in</a>
-        </Link>
+        {user?.email ? (
+          <>
+            <div className="dropdown dropdown-hover">
+              <div tabIndex={0}  className="m-1">
+                <img className="w-20 rounded-full" src={user?.photoURL} alt="" />
+              </div>
+              <ul
+                tabIndex={0}
+                className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 shadow"
+              >
+                <li>
+                  <button onClick={handleLogOut}>Logout</button>
+                </li>
+              </ul>
+            </div>
+          </>
+        ) : (
+          <>
+            <Link to="/signin">
+              <a className="btn">Sign-in</a>
+            </Link>
+          </>
+        )}
       </div>
     </div>
   );
