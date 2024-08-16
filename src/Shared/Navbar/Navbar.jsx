@@ -4,10 +4,30 @@ import { useContext } from "react";
 import { AuthContext } from "../../Provider/AuthProvider";
 
 const Navbar = () => {
-  const { user } = useContext(AuthContext);
+  const { user, signOutUser } = useContext(AuthContext);
 
   const handleLogOut = () =>{
-    console.log("Logout")
+    signOutUser()
+    .then(() => {
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Signout Success",
+        showConfirmButton: false,
+        timer: 1500
+      });
+      navigate('/signin');
+    })
+    .catch((error) => {
+      console.log(error)
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: error,
+        showConfirmButton: false,
+        timer: 1500
+      });
+    })
   }
 
   const Nav = (
