@@ -32,8 +32,8 @@ const Navbar = () => {
 
   const Nav = (
     <>
-      <NavLink>Home</NavLink>
-      <NavLink>About</NavLink>
+      <NavLink to={'/'}>Home</NavLink>
+      <NavLink to={'addProduct'}>Add Product</NavLink>
     </>
   );
   return (
