@@ -1,6 +1,7 @@
 
 
 ## Website Name:- ShopSphere
+This project includes a full-stack application where users can search for products by name and filter them by brand, category, and price range, supporting multiple filters simultaneously. Products can be sorted by price (low to high, high to low) and date added. Dummy data includes details like name, image, description, price, category, ratings, and creation date/time.
 
 ## Live Link
 -  https://shopsphere-cc06b.web.app
