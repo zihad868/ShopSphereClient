@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import ProductCard from "./ProductCard";
 
 const Products = () => {
   const {
@@ -26,6 +27,11 @@ const Products = () => {
           Our Products
         </h3>
         <p className="text-center w-3/4 mx-auto"></p>
+      </div>
+      <div className="grid md:grid-cols-2 lg:grid-cols-3">
+        {
+            products.map((product, _id) => <ProductCard key={_id} product={product}/>)
+        }
       </div>
     </div>
   );
