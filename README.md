@@ -33,7 +33,7 @@ This project includes a full-stack application where users can search for produc
 -  setup firebase configuration 
 
   ## Configure env file
-  VITE_IMAGE_BB_API= Your ImageBB API 
+  VITE_IMAGE_BB_API= Your ImageBB API  <br>
   VITE_BACKEND_API= Your Backend API 
 
 
