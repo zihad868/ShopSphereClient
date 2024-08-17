@@ -6,37 +6,68 @@ import { AuthContext } from "../../Provider/AuthProvider";
 
 const Products = () => {
   const { loading } = useContext(AuthContext);
-  const [sortOrder, setSortOrder] = useState(""); // State for sorting
-  const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const [sortOrder, setSortOrder] = useState(""); 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedBrand, setSelectedBrand] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [priceRange, setPriceRange] = useState({ min: "", max: "" });
+  const [currentPage, setCurrentPage] = useState(1); // Current page number
+  const itemsPerPage = 10; // Number of items per page
 
   const fetchProducts = async () => {
     const res = await axios.get(
-      `${import.meta.env.VITE_BACKEND_API}/api/products?sortBy=${sortOrder}&search=${searchQuery}`
+      `${import.meta.env.VITE_BACKEND_API}/api/products`, {
+        params: {
+          sortBy: sortOrder || undefined,
+          search: searchQuery || undefined,
+          brand: selectedBrand || undefined,
+          category: selectedCategory || undefined,
+          priceMin: priceRange.min || undefined,
+          priceMax: priceRange.max || undefined,
+          page: currentPage, // Send current page number
+          limit: itemsPerPage // Send items per page
+        }
+      }
     );
     return res.data;
   };
 
-  const {
-    data: products = [],
-    isLoading,
-    refetch,
-  } = useQuery({
-    queryKey: ["products", sortOrder, searchQuery],
+  const { data: productsData = {}, isLoading, refetch } = useQuery({
+    queryKey: ["products", sortOrder, searchQuery, selectedBrand, selectedCategory, priceRange, currentPage],
     queryFn: fetchProducts,
   });
 
-  const handleLowToHigh = () => {
-    setSortOrder("priceLowToHigh");
-    refetch();
-  };
-
-  const handleHighToLow = () => {
-    setSortOrder("priceHighToLow");
-    refetch();
-  };
+  const { products, totalPages } = productsData; // Assuming your API returns totalPages
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
+    setCurrentPage(1); // Reset to first page on new search
+    refetch();
+  };
+
+  const handleBrandChange = (e) => {
+    setSelectedBrand(e.target.value);
+    setCurrentPage(1); // Reset to first page on brand change
+    refetch();
+  };
+
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(e.target.value);
+    setCurrentPage(1); // Reset to first page on category change
+    refetch();
+  };
+
+  const handlePriceRangeChange = (e) => {
+    setPriceRange({
+      ...priceRange,
+      [e.target.name]: e.target.value
+    });
+    setCurrentPage(1); // Reset to first page on price range change
+    refetch();
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
     refetch();
   };
 
@@ -55,7 +86,6 @@ const Products = () => {
         <h3 className="text-center text-2xl font-bold text-secondary">
           Our Products
         </h3>
-        <p className="text-center w-3/4 mx-auto"></p>
       </div>
       
       {/* Search Product */}
@@ -69,6 +99,49 @@ const Products = () => {
         />
       </div>
 
+      {/* Filter by Brand */}
+      <div className="text-center mb-4">
+        <select onChange={handleBrandChange} value={selectedBrand} className="select select-bordered w-full max-w-xs">
+          <option value="">All Brands</option>
+          <option value="Nike">Nike</option>
+          <option value="Adidas">Adidas</option>
+          <option value="Puma">Puma</option>
+          <option value="Reebok">Reebok</option>
+        </select>
+      </div>
+
+      {/* Filter by Category */}
+      <div className="text-center mb-4">
+        <select onChange={handleCategoryChange} value={selectedCategory} className="select select-bordered w-full max-w-xs">
+          <option value="">All Categories</option>
+          <option value="Sports">Sports</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Clothing">Clothing</option>
+        </select>
+      </div>
+
+      {/* Filter by Price Range */}
+      <div className="text-center mb-4">
+        <div className="flex justify-center space-x-2">
+          <input
+            type="number"
+            placeholder="Min Price"
+            name="min"
+            value={priceRange.min}
+            onChange={handlePriceRangeChange}
+            className="input input-bordered w-1/3"
+          />
+          <input
+            type="number"
+            placeholder="Max Price"
+            name="max"
+            value={priceRange.max}
+            onChange={handlePriceRangeChange}
+            className="input input-bordered w-1/3"
+          />
+        </div>
+      </div>
+
       {/* Sorting Product */}
       <div className="mb-5 text-center">
         <div className="dropdown dropdown-hover">
@@ -77,13 +150,13 @@ const Products = () => {
           </div>
           <ul
             tabIndex={0}
-            className="dropdown-content menu bg-base-100 rounded-box z-[1]  p-2 shadow"
+            className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 shadow"
           >
             <li>
-              <button onClick={handleLowToHigh}>Price Low to High</button>
+              <button onClick={() => { setSortOrder("priceLowToHigh"); refetch(); }}>Price Low to High</button>
             </li>
             <li>
-              <button onClick={handleHighToLow}>Price High to Low</button>
+              <button onClick={() => { setSortOrder("priceHighToLow"); refetch(); }}>Price High to Low</button>
             </li>
           </ul>
         </div>
@@ -94,6 +167,23 @@ const Products = () => {
         {products.map((product, index) => (
           <ProductCard key={index} product={product} />
         ))}
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="mt-5 text-center">
+        <button 
+          className="btn mr-2" 
+          onClick={() => handlePageChange(currentPage - 1)} 
+          disabled={currentPage === 1}>
+          Previous
+        </button>
+        <span>Page {currentPage} of {totalPages}</span>
+        <button 
+          className="btn ml-2" 
+          onClick={() => handlePageChange(currentPage + 1)} 
+          disabled={currentPage === totalPages}>
+          Next
+        </button>
       </div>
     </div>
   );
