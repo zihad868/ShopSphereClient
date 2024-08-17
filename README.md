@@ -23,12 +23,14 @@
 - React Router Dom
 - Tanstack react-query
 - Firebase
+- react-icons
 
 
 ## Clone and Run Local
 -  first clone client
 -  command npm install
 -  setup firebase configuration in the .env file
+-  .env file Backend file name--> VITE_BACKEND_API
 
 
 # React + Vite
