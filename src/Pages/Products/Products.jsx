@@ -1,12 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
+import { AuthContext } from "../../Provider/AuthProvider";
 
 const Products = () => {
+    const {loading} = useContext(AuthContext);
+
   const {
     data: products = [],
-    isPending,
+    isLoading,
     refetch,
   } = useQuery({
     queryKey: ["products"],
@@ -19,6 +22,10 @@ const Products = () => {
   });
 
   console.log(products);
+
+  if(loading || isLoading){
+    return <div className="text-center"><progress className="progress w-56"></progress></div>
+  }
 
   return (
     <div>
