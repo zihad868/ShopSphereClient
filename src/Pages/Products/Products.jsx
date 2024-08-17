@@ -11,8 +11,8 @@ const Products = () => {
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [priceRange, setPriceRange] = useState({ min: "", max: "" });
-  const [currentPage, setCurrentPage] = useState(1); // Current page number
-  const itemsPerPage = 10; // Number of items per page
+  const [currentPage, setCurrentPage] = useState(1); 
+  const itemsPerPage = 10; 
 
   const fetchProducts = async () => {
     const res = await axios.get(
@@ -24,8 +24,8 @@ const Products = () => {
           category: selectedCategory || undefined,
           priceMin: priceRange.min || undefined,
           priceMax: priceRange.max || undefined,
-          page: currentPage, // Send current page number
-          limit: itemsPerPage // Send items per page
+          page: currentPage, 
+          limit: itemsPerPage 
         }
       }
     );
@@ -37,23 +37,23 @@ const Products = () => {
     queryFn: fetchProducts,
   });
 
-  const { products, totalPages } = productsData; // Assuming your API returns totalPages
+  const { products, totalPages } = productsData; 
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
-    setCurrentPage(1); // Reset to first page on new search
+    setCurrentPage(1); 
     refetch();
   };
 
   const handleBrandChange = (e) => {
     setSelectedBrand(e.target.value);
-    setCurrentPage(1); // Reset to first page on brand change
+    setCurrentPage(1); 
     refetch();
   };
 
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
-    setCurrentPage(1); // Reset to first page on category change
+    setCurrentPage(1); 
     refetch();
   };
 
@@ -62,7 +62,7 @@ const Products = () => {
       ...priceRange,
       [e.target.name]: e.target.value
     });
-    setCurrentPage(1); // Reset to first page on price range change
+    setCurrentPage(1);
     refetch();
   };
 
