@@ -7,6 +7,7 @@ import Signin from "../Pages/Authentication/Signin";
 import Signup from "../Pages/Authentication/Signup";
 import Home from "../Pages/Home/Home";
 import AddProducts from "../Pages/Products/AddProducts";
+import PrivateRoutes from "./PrivateRoutes";
 
 const router = createBrowserRouter([
   {
@@ -16,19 +17,23 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Home />
+        element: <Home />,
       },
       {
-        path: '/addProduct',
-        element: <AddProducts />
+        path: "/addProduct",
+        element: (
+          <PrivateRoutes>
+            <AddProducts />
+          </PrivateRoutes>
+        ),
       },
       {
         path: "/signin",
         element: <Signin />,
       },
       {
-        path: '/signup',
-        element: <Signup />
+        path: "/signup",
+        element: <Signup />,
       },
     ],
   },
